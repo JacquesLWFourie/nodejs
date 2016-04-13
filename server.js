@@ -14,24 +14,24 @@ http.createServer(function (request,response){
 		fs.exists(f,function(exists){
 			if(exists){
 				console.log('it exists');
-				
+
 				fs.readFile(f,function(err,data){
 					if(err){
 						response.writeHead(500);
 						response.end('Server Error!');
 						return;
 					}
-					
+
 					console.log('in headers');
 					var headers = {'Content-type':mimeTypes[path.extname(lookup)]};
 					response.writeHead(200,headers);
 					response.end(data);
-					
+
 				});
 				return;
 			}
 			response.writeHead(404);
 			response.end();
 		});
-		
+
 }).listen(8080);
