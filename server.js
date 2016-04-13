@@ -1,8 +1,8 @@
 var http = require('http');
 var path = require('path');
 var pages = [
-	{route:'',output:'wooHoo'},
-	{route:'about',output:'the about page'},
+	{route:'',output:'wooHooaaaa'},
+	{route:'about',output:'the about page!!!'},
 	{route:'another page',output:function(){return 'Heres '+this.route;}}
 ];
 http.createServer(function (request,response){
