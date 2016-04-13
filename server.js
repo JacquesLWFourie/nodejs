@@ -18,7 +18,7 @@ http.createServer(function (request,response){
 	});
 	if(!response.finished){
 		response.writeHead(404);
-		response.end('page not found');
+		response.end('page not found !!!');
 	}
 	/*
 	if(!response.finished){
