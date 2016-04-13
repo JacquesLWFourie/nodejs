@@ -1,27 +1,37 @@
 var http = require('http');
-var url = require('url');
+var path = require('path');
+var fs   = require('fs');
+var mimeTypes = {
+	'.js' : 'text/javascript',
+	'.html':'text/html',
+	'.css':'text/css'
+}
 
-var pages = [
-	{id:'1',route:'',output:'wooHooaaaa'},
-	{id:'2',route:'about',output:'simple routing with node'},
-	{id:'3',route:'/about/node',output:'some more routing'},
-	{id:'4',route:'another page',output:function(){return 'Heres '+this.route;}}
-];
 http.createServer(function (request,response){
-	var id = url.parse(decodeURI(request.url),true).query.id;
-	console.log('id ' + id);
-	if(id){
-		pages.forEach(function(page){
-			if(page.id === id){
-				response.writeHead(200,{'Content-type':'text/html'});
-				response.end(typeof page.output === 'function' ? page.output() : page.output);
+	var lookup = path.basename(decodeURI(request.url))	|| 'index.html';
+	var f = 'content/' + lookup;
+	console.log("LOOKUP " , lookup);
+		fs.exists(f,function(exists){
+			if(exists){
+				console.log('it exists');
+				
+				fs.readFile(f,function(err,data){
+					if(err){
+						response.writeHead(500);
+						response.end('Server Error!');
+						return;
+					}
+					
+					console.log('in headers');
+					var headers = {'Content-type':mimeTypes[path.extname(lookup)]};
+					response.writeHead(200,headers);
+					response.end(data);
+					
+				});
+				return;
 			}
+			response.writeHead(404);
+			response.end();
 		});
-
-	}
-	if(!response.finished){
-		response.writeHead(404);
-		response.end('page not found !!!');
-	}
-	
+		
 }).listen(8080);
